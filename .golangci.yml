@@ -1,64 +1,64 @@
 run:
-  tests: true
-  # timeout for analysis, e.g. 30s, 5m, default is 1m
-  timeout: 5m
+   tests: true
+   # timeout for analysis, e.g. 30s, 5m, default is 1m
+   timeout: 5m
 
 linters:
-  disable-all: true
-  enable:
-    - depguard
-    - dogsled
-    - errcheck
-    - exportloopref
-    - goconst
-    - gocritic
-    - gofumpt
-    - gosec
-    - gosimple
-    - govet
-    - ineffassign
-    - misspell
-    - nakedret
-    - nolintlint
-    - revive
-    - staticcheck
-    - stylecheck
-    - typecheck
-    - thelper
-    - unconvert
-    - unparam
-    - unused
+   disable-all: true
+   enable:
+      - depguard
+      - dogsled
+      - errcheck
+      - exportloopref
+      - goconst
+      - gocritic
+      - gofumpt
+      - gosec
+      - gosimple
+      - govet
+      - ineffassign
+      - misspell
+      - nakedret
+      - nolintlint
+      - revive
+      - staticcheck
+      - stylecheck
+      - typecheck
+      - thelper
+      - unconvert
+      - unparam
+      - unused
 
 issues:
-  exclude-rules:
-    # FIXME: Disabled until golangci-lint updates stylecheck with this fix:
-    # https://github.com/dominikh/go-tools/issues/389
-    - text: "ST1016:"
-      linters:
-        - stylecheck
-    - path: "migrations"
-      text: "SA1019:"
-      linters:
-        - staticcheck
+   exclude-rules:
+      # FIXME: Disabled until golangci-lint updates stylecheck with this fix:
+      # https://github.com/dominikh/go-tools/issues/389
+      - text: "ST1016:"
+        linters:
+           - stylecheck
+      - path: "migrations"
+        text: "SA1019:"
+        linters:
+           - staticcheck
 
-  max-issues-per-linter: 10000
-  max-same-issues: 10000
+   max-issues-per-linter: 10000
+   max-same-issues: 10000
 
 linters-settings:
-  gofumpt:
-    # Module path which contains the source code being formatted.
-    # Default: ""
-    module-path: github.com/notional-labs/nursery
-    # Choose whether to use the extra rules.
-    # Default: false
-    extra-rules: true
-  dogsled:
-    max-blank-identifiers: 3
-  maligned:
-    # print struct with more effective memory layout or not, false by default
-    suggest-new: true
-  nolintlint:
-    allow-unused: false
-    allow-leading-space: true
-    require-explanation: false
-    require-specific: false
+   gofumpt:
+      # Module path which contains the source code being formatted.
+      # Default: ""
+      module-path: github.com/coolcat-network/coolcat
+      # Choose whether to use the extra rules.
+      # Default: false
+      extra-rules: true
+   dogsled:
+      max-blank-identifiers: 3
+   maligned:
+      # print struct with more effective memory layout or not, false by default
+      suggest-new: true
+   nolintlint:
+      allow-unused: false
+      allow-leading-space: true
+      require-explanation: false
+      require-specific: false

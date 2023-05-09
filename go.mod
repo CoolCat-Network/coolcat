@@ -1,4 +1,4 @@
-module github.com/notional-labs/nursery
+module github.com/coolcat-network/coolcat
 
 go 1.20
 
