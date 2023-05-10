@@ -5,11 +5,11 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"time"
 
 	rosettaCmd "cosmossdk.io/tools/rosetta/cmd"
 
 	dbm "github.com/cometbft/cometbft-db"
-	tmcfg "github.com/cometbft/cometbft/config"
 	tmcli "github.com/cometbft/cometbft/libs/cli"
 	"github.com/cometbft/cometbft/libs/log"
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -93,9 +93,11 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 			}
 
 			customAppTemplate, customAppConfig := initAppConfig()
-			customTMConfig := initTendermintConfig()
 
-			return server.InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, customTMConfig)
+			timeoutCommit := time.Second
+
+
+			return InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, timeoutCommit)
 		},
 	}
 
@@ -104,17 +106,23 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	return rootCmd, encodingConfig
 }
 
-// initTendermintConfig helps to override default Tendermint Config values.
-// return tmcfg.DefaultConfig if no custom configuration is required for the application.
-func initTendermintConfig() *tmcfg.Config {
-	cfg := tmcfg.DefaultConfig()
+// // initTendermintConfig helps to override default Tendermint Config values.
+// // return tmcfg.DefaultConfig if no custom configuration is required for the application.
+// func initTendermintConfig() *tmcfg.Config {
+// 	cfg := tmcfg.DefaultConfig()
 
-	// these values put a higher strain on node memory
-	// cfg.P2P.MaxNumInboundPeers = 100
-	// cfg.P2P.MaxNumOutboundPeers = 40
+// 	cfg.Consensus.TimeoutCommit = time.Second / time.Millisecond / 2
+// 	cfg.Consensus.TimeoutPrecommit = time.Second / 2
+// 	cfg.Consensus.TimeoutPrevote = time.Second / 2
+// 	cfg.Consensus.TimeoutPropose = time.Second
+// 	// cfg.Consensus.SkipTimeoutCommit
 
-	return cfg
-}
+// 	// these values put a higher strain on node memory
+// 	// cfg.P2P.MaxNumInboundPeers = 100
+// 	// cfg.P2P.MaxNumOutboundPeers = 40
+
+// 	return cfg
+// }
 
 // initAppConfig helps to override default appConfig template and configs.
 // return "", nil if no custom configuration is required for the application.
@@ -142,7 +150,7 @@ func initAppConfig() (string, interface{}) {
 	//   own app.toml to override, or use this default value.
 	//
 	// In simapp, we set the min gas prices to 0.
-	srvCfg.MinGasPrices = "0uccat"
+	srvCfg.MinGasPrices = "2000000uccat"
 	// srvCfg.BaseConfig.IAVLDisableFastNode = true // disable fastnode by default
 
 	customAppConfig := CustomAppConfig{
@@ -158,6 +166,7 @@ func initAppConfig() (string, interface{}) {
 
 func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 	gentxModule := app.ModuleBasics[genutiltypes.ModuleName].(genutil.AppModuleBasic)
+
 	rootCmd.AddCommand(
 		genutilcli.InitCmd(app.ModuleBasics, app.DefaultNodeHome),
 		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome, gentxModule.GenTxValidator),
@@ -288,6 +297,7 @@ func newApp(
 		appOpts,
 		wasmOpts,
 		baseapp.SetPruning(pruningOpts),
+		baseapp.SetChainID("kitten-05"),
 		baseapp.SetMinGasPrices(cast.ToString(appOpts.Get(server.FlagMinGasPrices))),
 		baseapp.SetHaltHeight(cast.ToUint64(appOpts.Get(server.FlagHaltHeight))),
 		baseapp.SetHaltTime(cast.ToUint64(appOpts.Get(server.FlagHaltTime))),

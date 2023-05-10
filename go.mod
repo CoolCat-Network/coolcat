@@ -32,7 +32,7 @@ require (
 	github.com/rakyll/statik v0.1.7 // indirect
 	github.com/spf13/cast v1.5.0
 	github.com/spf13/cobra v1.6.1
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.2
 	github.com/syndtr/goleveldb v1.0.1-0.20220721030215-126854af5e6d // indirect
@@ -177,6 +177,7 @@ replace (
 	github.com/99designs/keyring => github.com/cosmos/keyring v1.2.0
 	// use notional fork of wasmd (should be from branch: 47-with-token-factory)
 	github.com/CosmWasm/wasmd => github.com/notional-labs/wasmd v0.40.0-tf.rc2
+	github.com/cosmos/cosmos-sdk => github.com/reecepbcups/cosmos-sdk v0.47.1-archive.1
 	// dgrijalva/jwt-go is deprecated and doesn't receive security updates.
 	// TODO: remove it: https://github.com/cosmos/cosmos-sdk/issues/13134
 	github.com/dgrijalva/jwt-go => github.com/golang-jwt/jwt/v4 v4.4.2
