@@ -1,0 +1,10 @@
+syntax = "proto3";
+package coolcat.alloc.v1;
+
+import "gogoproto/gogo.proto";
+import "coolcat/alloc/v1/params.proto";
+
+option go_package = "github.com/coolcat-network/coolcat/v1/x/alloc/types";
+
+// GenesisState defines the alloc module's genesis state.
+message GenesisState { Params params = 1 [ (gogoproto.nullable) = false ]; }

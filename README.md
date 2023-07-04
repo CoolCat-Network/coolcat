@@ -1,1 +1,1 @@
-# CoolCat - Blockchain
+# CoolCat - The Interchain Gaming Hub

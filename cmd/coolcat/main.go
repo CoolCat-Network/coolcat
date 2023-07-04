@@ -3,11 +3,11 @@ package main
 import (
 	"os"
 
-	"github.com/coolcat-network/coolcat/cmd/coolcat/cmd"
+	"github.com/coolcat-network/coolcat/v1/cmd/coolcat/cmd"
 	"github.com/cosmos/cosmos-sdk/server"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	"github.com/coolcat-network/coolcat/app"
+	"github.com/coolcat-network/coolcat/v1/app"
 )
 
 func main() {

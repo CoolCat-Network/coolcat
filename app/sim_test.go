@@ -83,7 +83,7 @@ func TestFullAppSimulation(t *testing.T) {
 		AppStateFn(app.AppCodec(), app.SimulationManager()),
 		simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 		simtestutil.SimulationOperations(app, app.AppCodec(), config),
-		ModuleAccountAddrs(),
+		BlockedAddrs(),
 		config,
 		app.AppCodec(),
 	)
@@ -109,7 +109,7 @@ func TestAppImportExport(t *testing.T) {
 		AppStateFn(app.AppCodec(), app.SimulationManager()),
 		simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 		simtestutil.SimulationOperations(app, app.AppCodec(), config),
-		ModuleAccountAddrs(),
+		BlockedAddrs(),
 		config,
 		app.AppCodec(),
 	)
@@ -138,7 +138,7 @@ func TestAppImportExport(t *testing.T) {
 		require.NoError(t, os.RemoveAll(newDir))
 	}()
 
-	newApp := NewApp(log.NewNopLogger(), newDB, nil, true, wasm.EnableAllProposals, appOptions, emptyWasmOpts, fauxMerkleModeOpt)
+	newApp := NewCoolCatApp(log.NewNopLogger(), newDB, nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasm.EnableAllProposals, appOptions, emptyWasmOpts, fauxMerkleModeOpt)
 	require.Equal(t, "WasmApp", newApp.Name())
 
 	var genesisState GenesisState
@@ -206,7 +206,7 @@ func TestAppSimulationAfterImport(t *testing.T) {
 		AppStateFn(app.AppCodec(), app.SimulationManager()),
 		simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 		simtestutil.SimulationOperations(app, app.AppCodec(), config),
-		ModuleAccountAddrs(),
+		BlockedAddrs(),
 		config,
 		app.AppCodec(),
 	)
@@ -240,7 +240,7 @@ func TestAppSimulationAfterImport(t *testing.T) {
 		require.NoError(t, os.RemoveAll(newDir))
 	}()
 
-	newApp := NewApp(log.NewNopLogger(), newDB, nil, true, wasm.EnableAllProposals, appOptions, emptyWasmOpts, fauxMerkleModeOpt)
+	newApp := NewCoolCatApp(log.NewNopLogger(), newDB, nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasm.EnableAllProposals, appOptions, emptyWasmOpts, fauxMerkleModeOpt)
 	require.Equal(t, "WasmApp", newApp.Name())
 
 	newApp.InitChain(abci.RequestInitChain{
@@ -254,14 +254,14 @@ func TestAppSimulationAfterImport(t *testing.T) {
 		AppStateFn(app.AppCodec(), app.SimulationManager()),
 		simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 		simtestutil.SimulationOperations(newApp, newApp.AppCodec(), config),
-		ModuleAccountAddrs(),
+		BlockedAddrs(),
 		config,
 		app.AppCodec(),
 	)
 	require.NoError(t, err)
 }
 
-func setupSimulationApp(t *testing.T, msg string) (simtypes.Config, dbm.DB, simtestutil.AppOptionsMap, *App) {
+func setupSimulationApp(t *testing.T, msg string) (simtypes.Config, dbm.DB, simtestutil.AppOptionsMap, *CoolCatApp) {
 	t.Helper()
 	config := simcli.NewConfigFromFlags()
 	config.ChainID = SimAppChainID
@@ -281,7 +281,7 @@ func setupSimulationApp(t *testing.T, msg string) (simtypes.Config, dbm.DB, simt
 	appOptions[flags.FlagHome] = dir // ensure a unique folder
 	appOptions[server.FlagInvCheckPeriod] = simcli.FlagPeriodValue
 
-	app := NewApp(logger, db, nil, true, wasm.EnableAllProposals, appOptions, emptyWasmOpts, fauxMerkleModeOpt)
+	app := NewCoolCatApp(logger, db, nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasm.EnableAllProposals, appOptions, emptyWasmOpts, fauxMerkleModeOpt)
 	require.Equal(t, "WasmApp", app.Name())
 	return config, db, appOptions, app
 }
@@ -320,7 +320,7 @@ func TestAppStateDeterminism(t *testing.T) {
 			}
 
 			db := dbm.NewMemDB()
-			app := NewApp(logger, db, nil, true, wasm.EnableAllProposals, appOptions, emptyWasmOpts, interBlockCacheOpt())
+			app := NewCoolCatApp(logger, db, nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasm.EnableAllProposals, appOptions, emptyWasmOpts, interBlockCacheOpt())
 
 			fmt.Printf(
 				"running non-determinism simulation; seed %d: %d/%d, attempt: %d/%d\n",
@@ -334,7 +334,7 @@ func TestAppStateDeterminism(t *testing.T) {
 				AppStateFn(app.AppCodec(), app.SimulationManager()),
 				simtypes.RandomAccounts, // Replace with own random account function if using keys other than secp256k1
 				simtestutil.SimulationOperations(app, app.AppCodec(), config),
-				ModuleAccountAddrs(),
+				BlockedAddrs(),
 				config,
 				app.AppCodec(),
 			)

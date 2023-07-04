@@ -3,7 +3,7 @@ package app
 import (
 	"github.com/cosmos/cosmos-sdk/std"
 
-	"github.com/coolcat-network/coolcat/app/params"
+	"github.com/coolcat-network/coolcat/v1/app/params"
 )
 
 // MakeEncodingConfig creates a new EncodingConfig with all modules registered

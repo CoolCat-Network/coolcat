@@ -54,7 +54,7 @@ type SetupOptions struct {
 	WasmOpts []wasm.Option
 }
 
-func setup(tb testing.TB, chainID string, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*App, GenesisState) {
+func setup(tb testing.TB, chainID string, withGenesis bool, invCheckPeriod uint, opts ...wasm.Option) (*CoolCatApp, GenesisState) {
 	tb.Helper()
 	nodeHome := tb.TempDir()
 	snapshotDir := filepath.Join(nodeHome, "data", "snapshots")
@@ -72,7 +72,7 @@ func setup(tb testing.TB, chainID string, withGenesis bool, invCheckPeriod uint,
 	appOptions[flags.FlagHome] = nodeHome // ensure unique folder
 	appOptions[server.FlagInvCheckPeriod] = invCheckPeriod
 
-	app := NewApp(log.NewNopLogger(), db, nil, true, wasmtypes.EnableAllProposals, appOptions, opts, baseAppOpts...)
+	app := NewCoolCatApp(log.NewNopLogger(), db, nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasmtypes.EnableAllProposals, appOptions, opts, baseAppOpts...)
 	if withGenesis {
 		return app, NewDefaultGenesisState(app.AppCodec())
 	}
@@ -80,7 +80,7 @@ func setup(tb testing.TB, chainID string, withGenesis bool, invCheckPeriod uint,
 }
 
 // NewWasmAppWithCustomOptions initializes a new WasmApp with custom options.
-func NewAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions) *App {
+func NewAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions) *CoolCatApp {
 	t.Helper()
 
 	privVal := mock.NewPV()
@@ -98,7 +98,7 @@ func NewAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions)
 		Coins:   sdk.NewCoins(sdk.NewCoin(sdk.DefaultBondDenom, sdk.NewInt(100000000000000))),
 	}
 
-	app := NewApp(options.Logger, options.DB, nil, true, wasmtypes.EnableAllProposals, options.AppOpts, options.WasmOpts)
+	app := NewCoolCatApp(options.Logger, options.DB, nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasmtypes.EnableAllProposals, options.AppOpts, options.WasmOpts)
 	genesisState := NewDefaultGenesisState(app.appCodec)
 	genesisState, err = GenesisStateWithValSet(app.AppCodec(), genesisState, valSet, []authtypes.GenesisAccount{acc}, balance)
 	require.NoError(t, err)
@@ -122,7 +122,7 @@ func NewAppWithCustomOptions(t *testing.T, isCheckTx bool, options SetupOptions)
 }
 
 // Setup initializes a new WasmApp. A Nop logger is set in WasmApp.
-func Setup(t *testing.T, opts ...wasm.Option) *App {
+func Setup(t *testing.T, opts ...wasm.Option) *CoolCatApp {
 	t.Helper()
 
 	privVal := mock.NewPV()
@@ -150,7 +150,7 @@ func Setup(t *testing.T, opts ...wasm.Option) *App {
 // that also act as delegators. For simplicity, each validator is bonded with a delegation
 // of one consensus engine unit in the default token of the WasmApp from first genesis
 // account. A Nop logger is set in WasmApp.
-func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, opts []wasm.Option, balances ...banktypes.Balance) *App {
+func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs []authtypes.GenesisAccount, chainID string, opts []wasm.Option, balances ...banktypes.Balance) *CoolCatApp {
 	t.Helper()
 
 	app, genesisState := setup(t, chainID, true, 5, opts...)
@@ -186,7 +186,7 @@ func SetupWithGenesisValSet(t *testing.T, valSet *tmtypes.ValidatorSet, genAccs 
 }
 
 // SetupWithEmptyStore set up a wasmd app instance with empty DB
-func SetupWithEmptyStore(tb testing.TB) *App {
+func SetupWithEmptyStore(tb testing.TB) *CoolCatApp {
 	tb.Helper()
 	app, _ := setup(tb, "testing", false, 0)
 	return app
@@ -194,7 +194,7 @@ func SetupWithEmptyStore(tb testing.TB) *App {
 
 // GenesisStateWithSingleValidator initializes GenesisState with a single validator and genesis accounts
 // that also act as delegators.
-func GenesisStateWithSingleValidator(t *testing.T, app *App) GenesisState {
+func GenesisStateWithSingleValidator(t *testing.T, app *CoolCatApp) GenesisState {
 	t.Helper()
 
 	privVal := mock.NewPV()
@@ -224,11 +224,11 @@ func GenesisStateWithSingleValidator(t *testing.T, app *App) GenesisState {
 
 // AddTestAddrsIncremental constructs and returns accNum amount of accounts with an
 // initial balance of accAmt in random order
-func AddTestAddrsIncremental(app *App, ctx sdk.Context, accNum int, accAmt math.Int) []sdk.AccAddress {
+func AddTestAddrsIncremental(app *CoolCatApp, ctx sdk.Context, accNum int, accAmt math.Int) []sdk.AccAddress {
 	return addTestAddrs(app, ctx, accNum, accAmt, simtestutil.CreateIncrementalAccounts)
 }
 
-func addTestAddrs(app *App, ctx sdk.Context, accNum int, accAmt math.Int, strategy simtestutil.GenerateAccountStrategy) []sdk.AccAddress {
+func addTestAddrs(app *CoolCatApp, ctx sdk.Context, accNum int, accAmt math.Int, strategy simtestutil.GenerateAccountStrategy) []sdk.AccAddress {
 	testAddrs := strategy(accNum)
 
 	initCoins := sdk.NewCoins(sdk.NewCoin(app.StakingKeeper.BondDenom(ctx), accAmt))
@@ -240,7 +240,7 @@ func addTestAddrs(app *App, ctx sdk.Context, accNum int, accAmt math.Int, strate
 	return testAddrs
 }
 
-func initAccountWithCoins(app *App, ctx sdk.Context, addr sdk.AccAddress, coins sdk.Coins) {
+func initAccountWithCoins(app *CoolCatApp, ctx sdk.Context, addr sdk.AccAddress, coins sdk.Coins) {
 	err := app.BankKeeper.MintCoins(ctx, minttypes.ModuleName, coins)
 	if err != nil {
 		panic(err)
@@ -252,10 +252,10 @@ func initAccountWithCoins(app *App, ctx sdk.Context, addr sdk.AccAddress, coins 
 	}
 }
 
-// ModuleAccountAddrs provides a list of blocked module accounts from configuration in AppConfig
+// BlockedAddrs provides a list of blocked module accounts from configuration in AppConfig
 //
 // Ported from WasmApp
-func ModuleAccountAddrs() map[string]bool {
+func BlockedAddrs() map[string]bool {
 	return BlockedAddresses()
 }
 
@@ -269,10 +269,16 @@ func NewTestNetworkFixture() network.TestFixture {
 	}
 	defer os.RemoveAll(dir)
 
-	app := NewApp(log.NewNopLogger(), dbm.NewMemDB(), nil, true, wasmtypes.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(dir), emptyWasmOptions)
+	app := NewCoolCatApp(log.NewNopLogger(), dbm.NewMemDB(), nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasmtypes.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(dir), emptyWasmOptions)
 	appCtr := func(val network.ValidatorI) servertypes.Application {
-		return NewApp(
-			val.GetCtx().Logger, dbm.NewMemDB(), nil, true, wasmtypes.EnableAllProposals,
+		return NewCoolCatApp(
+			val.GetCtx().Logger,
+			dbm.NewMemDB(),
+			nil,
+			true,
+			make(map[int64]bool),
+			os.ExpandEnv("$HOME/") + NodeDir,
+			wasmtypes.EnableAllProposals,
 			simtestutil.NewAppOptionsWithFlagHome(val.GetCtx().Config.RootDir),
 			emptyWasmOptions,
 			bam.SetPruning(pruningtypes.NewPruningOptionsFromString(val.GetAppConfig().Pruning)),

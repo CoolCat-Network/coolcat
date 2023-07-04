@@ -44,8 +44,8 @@ import (
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	wasmtypes "github.com/CosmWasm/wasmd/x/wasm/types"
-	"github.com/coolcat-network/coolcat/app"
-	"github.com/coolcat-network/coolcat/app/params"
+	"github.com/coolcat-network/coolcat/v1/app"
+	"github.com/coolcat-network/coolcat/v1/app/params"
 )
 
 // NewRootCmd creates a new root command for wasmd. It is called once in the
@@ -54,9 +54,9 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 	encodingConfig := app.MakeEncodingConfig()
 
 	cfg := sdk.GetConfig()
-	cfg.SetBech32PrefixForAccount(app.Bech32PrefixAccAddr, app.Bech32PrefixAccPub)
-	cfg.SetBech32PrefixForValidator(app.Bech32PrefixValAddr, app.Bech32PrefixValPub)
-	cfg.SetBech32PrefixForConsensusNode(app.Bech32PrefixConsAddr, app.Bech32PrefixConsPub)
+	cfg.SetBech32PrefixForAccount(params.Bech32PrefixAccAddr, params.Bech32PrefixAccPub)
+	cfg.SetBech32PrefixForValidator(params.Bech32PrefixValAddr, params.Bech32PrefixValPub)
+	cfg.SetBech32PrefixForConsensusNode(params.Bech32PrefixConsAddr, params.Bech32PrefixConsPub)
 	cfg.SetAddressVerifier(wasmtypes.VerifyAddressLen())
 	cfg.Seal()
 
@@ -291,8 +291,10 @@ func newApp(
 		cast.ToUint32(appOpts.Get(server.FlagStateSyncSnapshotKeepRecent)),
 	)
 
-	return app.NewApp(
+	return app.NewCoolCatApp(
 		logger, db, traceStore, true,
+		skipUpgradeHeights,
+		os.ExpandEnv("$HOME/") + ".coolcat",
 		app.GetEnabledProposals(),
 		appOpts,
 		wasmOpts,
@@ -323,7 +325,7 @@ func appExport(
 	appOpts servertypes.AppOptions,
 	modulesToExport []string,
 ) (servertypes.ExportedApp, error) {
-	var wasmApp *app.App
+	var wasmApp *app.CoolCatApp
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
 		return servertypes.ExportedApp{}, errors.New("application home is not set")
@@ -334,16 +336,23 @@ func appExport(
 		return servertypes.ExportedApp{}, errors.New("appOpts is not viper.Viper")
 	}
 
+	skipUpgradeHeights := make(map[int64]bool)
+	for _, h := range cast.ToIntSlice(appOpts.Get(server.FlagUnsafeSkipUpgrades)) {
+		skipUpgradeHeights[int64(h)] = true
+	}
+
 	// overwrite the FlagInvCheckPeriod
 	viperAppOpts.Set(server.FlagInvCheckPeriod, 1)
 	appOpts = viperAppOpts
 
 	var emptyWasmOpts []wasm.Option
-	wasmApp = app.NewApp(
+	wasmApp = app.NewCoolCatApp(
 		logger,
 		db,
 		traceStore,
 		height == -1,
+		skipUpgradeHeights,
+		homePath,
 		app.GetEnabledProposals(),
 		appOpts,
 		emptyWasmOpts,

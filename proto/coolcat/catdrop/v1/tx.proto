@@ -1,0 +1,30 @@
+syntax = "proto3";
+package coolcat.catdrop.v1;
+
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+import "coolcat/catdrop/v1/claim_record.proto";
+
+option go_package = "github.com/coolcat-network/coolcat/v1/x/catdrop/types";
+
+// Msg defines the Msg service.
+service Msg {
+  // this line is used by starport scaffolding # proto/tx/rpc
+  rpc ClaimFor(MsgClaimFor) returns (MsgClaimForResponse);
+}
+
+message MsgClaimFor {
+  string sender = 1;
+  string address = 2;
+  Action action = 3;
+}
+
+message MsgClaimForResponse {
+  string address = 1;
+  // total initial claimable amount for the user
+  repeated cosmos.base.v1beta1.Coin claimed_amount = 2 [
+    (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
+    (gogoproto.nullable) = false,
+    (gogoproto.moretags) = "yaml:\"claimed_amount\""
+  ];
+}

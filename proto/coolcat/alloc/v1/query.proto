@@ -1,0 +1,26 @@
+syntax = "proto3";
+package coolcat.alloc.v1;
+
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "coolcat/alloc/v1/params.proto";
+// this line is used by starport scaffolding # 1
+
+option go_package = "github.com/coolcat-network/coolcat/v1/x/alloc/types";
+
+// QueryParamsRequest is the request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is the response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  // params defines the parameters of the module.
+  Params params = 1 [ (gogoproto.nullable) = false ];
+}
+
+// Query defines the gRPC querier service.
+service Query {
+  // this line is used by starport scaffolding # 2
+  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/coolcat/alloc/v1/params";
+  }
+}

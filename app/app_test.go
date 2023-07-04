@@ -26,7 +26,7 @@ func TestExport(t *testing.T) {
 	gapp.Commit()
 
 	// Making a new app object with the db, so that initchain hasn't been called
-	newGapp := NewApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, wasm.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(t.TempDir()), emptyWasmOpts)
+	newGapp := NewCoolCatApp(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), db, nil, true, make(map[int64]bool), os.ExpandEnv("$HOME/") + NodeDir, wasm.EnableAllProposals, simtestutil.NewAppOptionsWithFlagHome(t.TempDir()), emptyWasmOpts)
 	_, err := newGapp.ExportAppStateAndValidators(false, []string{}, nil)
 	require.NoError(t, err, "ExportAppStateAndValidators should not have an error")
 }
@@ -50,7 +50,7 @@ func TestBlockedAddrs(t *testing.T) {
 
 func TestGetMaccPerms(t *testing.T) {
 	dup := GetMaccPerms()
-	require.Equal(t, maccPerms, dup, "duplicated module account permissions differed from actual module account permissions")
+	require.Equal(t, moduleAccountPermissions, dup, "duplicated module account permissions differed from actual module account permissions")
 }
 
 func TestGetEnabledProposals(t *testing.T) {

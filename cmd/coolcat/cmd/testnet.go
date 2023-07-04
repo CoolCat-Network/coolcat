@@ -18,7 +18,7 @@ import (
 
 	"cosmossdk.io/math"
 
-	"github.com/coolcat-network/coolcat/app"
+	"github.com/coolcat-network/coolcat/v1/app"
 	"github.com/cosmos/cosmos-sdk/client"
 	"github.com/cosmos/cosmos-sdk/client/flags"
 	"github.com/cosmos/cosmos-sdk/client/tx"
