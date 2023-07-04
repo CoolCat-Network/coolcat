@@ -24,7 +24,6 @@ func (k Keeper) InitGenesis(ctx sdk.Context, data types.GenesisState) []abci.Val
 func (k Keeper) ExportGenesis(ctx sdk.Context) *types.GenesisState {
 	genesis := types.DefaultGenesis()
 
-	// this line is used by starport scaffolding # genesis/module/export
 	params := k.GetParams(ctx)
 	genesis.ModuleAccountBalance = k.GetModuleAccountBalance(ctx)
 	genesis.Params = params

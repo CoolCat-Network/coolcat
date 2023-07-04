@@ -6,13 +6,11 @@ import "google/api/annotations.proto";
 import "cosmos/base/v1beta1/coin.proto";
 import "coolcat/catdrop/v1/claim_record.proto";
 import "coolcat/catdrop/v1/params.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/coolcat-network/coolcat/v1/x/catdrop/types";
 
 // Query defines the gRPC querier service.
 service Query {
-  // this line is used by starport scaffolding # 2
   rpc ModuleAccountBalance(QueryModuleAccountBalanceRequest)
       returns (QueryModuleAccountBalanceResponse) {
     option (google.api.http).get =
@@ -36,7 +34,6 @@ service Query {
         "/coolcat/catdrop/v1/total_claimable/{address}";
   }
 }
-// this line is used by starport scaffolding # 3
 
 // QueryParamsRequest is the request type for the Query/Params RPC method.
 message QueryModuleAccountBalanceRequest {}

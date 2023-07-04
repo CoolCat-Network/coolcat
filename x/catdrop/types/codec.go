@@ -10,7 +10,6 @@ import (
 
 func RegisterLegacyAminoCodec(cdc *codec.LegacyAmino) {
 	cdc.RegisterConcrete(&MsgClaimFor{}, "catdrop/ClaimFor", nil)
-	// this line is used by starport scaffolding # 2
 }
 
 func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
@@ -18,7 +17,6 @@ func RegisterInterfaces(registry cdctypes.InterfaceRegistry) {
 		&MsgClaimFor{},
 	)
 
-	// this line is used by starport scaffolding # 3
 	msgservice.RegisterMsgServiceDesc(registry, &_Msg_serviceDesc)
 }
 

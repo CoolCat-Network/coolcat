@@ -191,7 +191,6 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	// this line is used by starport scaffolding # proto/tx/rpc
 	ClaimFor(ctx context.Context, in *MsgClaimFor, opts ...grpc.CallOption) (*MsgClaimForResponse, error)
 }
 
@@ -214,7 +213,6 @@ func (c *msgClient) ClaimFor(ctx context.Context, in *MsgClaimFor, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	// this line is used by starport scaffolding # proto/tx/rpc
 	ClaimFor(context.Context, *MsgClaimFor) (*MsgClaimForResponse, error)
 }
 

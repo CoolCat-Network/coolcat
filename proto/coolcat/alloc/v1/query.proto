@@ -4,7 +4,6 @@ package coolcat.alloc.v1;
 import "gogoproto/gogo.proto";
 import "google/api/annotations.proto";
 import "coolcat/alloc/v1/params.proto";
-// this line is used by starport scaffolding # 1
 
 option go_package = "github.com/coolcat-network/coolcat/v1/x/alloc/types";
 
@@ -19,7 +18,6 @@ message QueryParamsResponse {
 
 // Query defines the gRPC querier service.
 service Query {
-  // this line is used by starport scaffolding # 2
   rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/coolcat/alloc/v1/params";
   }

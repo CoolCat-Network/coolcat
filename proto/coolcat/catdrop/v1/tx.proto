@@ -9,7 +9,6 @@ option go_package = "github.com/coolcat-network/coolcat/v1/x/catdrop/types";
 
 // Msg defines the Msg service.
 service Msg {
-  // this line is used by starport scaffolding # proto/tx/rpc
   rpc ClaimFor(MsgClaimFor) returns (MsgClaimForResponse);
 }
 
