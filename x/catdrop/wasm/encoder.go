@@ -24,11 +24,11 @@ type ClaimFor struct {
 
 func (a ClaimAction) ToAction() (catdroptypes.Action, error) {
 	if a == ClaimActionProfile {
-		return catdroptypes.ActionCreateProfile, nil
+		return catdroptypes.ACTION_CREATEPROFILE, nil
 	}
 
 	if a == ClaimActionClowder {
-		return catdroptypes.ActionUseClowder, nil
+		return catdroptypes.ACTION_USECLOWDER, nil
 	}
 
 	return 0, fmt.Errorf("invalid action")

@@ -6,7 +6,7 @@ import (
 )
 
 func (k Keeper) AfterProposalVote(ctx sdk.Context, proposalID uint64, voterAddr sdk.AccAddress) {
-	_, err := k.ClaimCoinsForAction(ctx, voterAddr, types.ActionVote)
+	_, err := k.ClaimCoinsForAction(ctx, voterAddr, types.ACTION_VOTE_UNSPECIFIED)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -17,7 +17,7 @@ func (k Keeper) AfterDelegationModified(ctx sdk.Context, delAddr sdk.AccAddress,
 	if ctx.BlockHeight() <= 1 {
 		return
 	}
-	_, err := k.ClaimCoinsForAction(ctx, delAddr, types.ActionDelegateStake)
+	_, err := k.ClaimCoinsForAction(ctx, delAddr, types.ACTION_STAKE)
 	if err != nil {
 		panic(err.Error())
 	}

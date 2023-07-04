@@ -64,7 +64,7 @@ func (suite *KeeperTestHelper) TestClaimFor() {
 	})
 	err := suite.App.CatdropKeeper.SetClaimRecords(suite.Ctx, claimRecords)
 	suite.Require().NoError(err)
-	msgClaimFor := types.NewMsgClaimFor(contractAddress1.String(), addr1.String(), types.ActionCreateProfile)
+	msgClaimFor := types.NewMsgClaimFor(contractAddress1.String(), addr1.String(), types.ACTION_CREATEPROFILE)
 	ctx := sdk.WrapSDKContext(suite.Ctx)
 	_, err = suite.msgSrvr.ClaimFor(ctx, msgClaimFor)
 	suite.Error(err)
@@ -78,29 +78,29 @@ func (suite *KeeperTestHelper) TestClaimFor() {
 		AllowedClaimers: []types.ClaimAuthorization{
 			{
 				ContractAddress: contractAddress1.String(),
-				Action:          types.ActionCreateProfile,
+				Action:          types.ACTION_CREATEPROFILE,
 			},
 			{
 				ContractAddress: contractAddress2.String(),
-				Action:          types.ActionUseClowder,
+				Action:          types.ACTION_USECLOWDER,
 			},
 		},
 	})
 
 	// unauthorized
-	msgClaimFor = types.NewMsgClaimFor(wasmkeeper.BuildContractAddressClassic(2, 1).String(), addr1.String(), types.ActionCreateProfile)
+	msgClaimFor = types.NewMsgClaimFor(wasmkeeper.BuildContractAddressClassic(2, 1).String(), addr1.String(), types.ACTION_CREATEPROFILE)
 	_, err = suite.msgSrvr.ClaimFor(ctx, msgClaimFor)
 	suite.Require().Error(err)
 	suite.Contains(err.Error(), "address is not allowed to claim")
 
 	// unauthorized to claim another action
-	msgClaimFor = types.NewMsgClaimFor(contractAddress1.String(), addr1.String(), types.ActionCreateProfile)
+	msgClaimFor = types.NewMsgClaimFor(contractAddress1.String(), addr1.String(), types.ACTION_CREATEPROFILE)
 	_, err = suite.msgSrvr.ClaimFor(ctx, msgClaimFor)
 	suite.Require().Error(err)
 	suite.Contains(err.Error(), "address is not allowed to claim")
 
 	// claim
-	msgClaimFor = types.NewMsgClaimFor(contractAddress1.String(), addr1.String(), types.ActionCreateProfile)
+	msgClaimFor = types.NewMsgClaimFor(contractAddress1.String(), addr1.String(), types.ACTION_CREATEPROFILE)
 	_, err = suite.msgSrvr.ClaimFor(ctx, msgClaimFor)
 	suite.Require().NoError(err)
 
@@ -113,7 +113,7 @@ func (suite *KeeperTestHelper) TestClaimFor() {
 	suite.Require().Equal([]bool{false, true, false, false}, record.ActionCompleted)
 
 	// claim 2
-	msgClaimFor = types.NewMsgClaimFor(contractAddress2.String(), addr1.String(), types.ActionCreateProfile)
+	msgClaimFor = types.NewMsgClaimFor(contractAddress2.String(), addr1.String(), types.ACTION_CREATEPROFILE)
 	_, err = suite.msgSrvr.ClaimFor(ctx, msgClaimFor)
 	suite.Require().NoError(err)
 
@@ -130,7 +130,7 @@ func (suite *KeeperTestHelper) TestClaimFor() {
 	suite.Require().Equal([]bool{false, true, true, false}, record.ActionCompleted)
 
 	// claim second address
-	msgClaimFor = types.NewMsgClaimFor(contractAddress2.String(), addr2.String(), types.ActionCreateProfile)
+	msgClaimFor = types.NewMsgClaimFor(contractAddress2.String(), addr2.String(), types.ACTION_CREATEPROFILE)
 	_, err = suite.msgSrvr.ClaimFor(ctx, msgClaimFor)
 	suite.Require().NoError(err)
 
@@ -195,7 +195,7 @@ func (suite *KeeperTestHelper) TestHookBeforeAirdropStart() {
 	// Now, it is before starting air drop, so this value should return the empty coins
 	suite.True(coins.Empty())
 
-	coins, err = suite.App.CatdropKeeper.GetClaimableAmountForAction(suite.Ctx, addr1, types.ActionDelegateStake)
+	coins, err = suite.App.CatdropKeeper.GetClaimableAmountForAction(suite.Ctx, addr1, types.ACTION_STAKE)
 	suite.NoError(err)
 	// Now, it is before starting air drop, so this value should return the empty coins
 	suite.True(coins.Empty())
@@ -243,7 +243,7 @@ func (suite *KeeperTestHelper) TestAirdropDisabled() {
 	// Now, it is before starting air drop, so this value should return the empty coins
 	suite.True(coins.Empty())
 
-	coins, err = suite.App.CatdropKeeper.GetClaimableAmountForAction(suite.Ctx, addr1, types.ActionDelegateStake)
+	coins, err = suite.App.CatdropKeeper.GetClaimableAmountForAction(suite.Ctx, addr1, types.ACTION_STAKE)
 	suite.NoError(err)
 	// Now, it is before starting air drop, so this value should return the empty coins
 	suite.True(coins.Empty())
@@ -327,7 +327,7 @@ func (suite *KeeperTestHelper) TestDuplicatedActionNotWithdrawRepeatedly() {
 	suite.App.CatdropKeeper.AfterDelegationModified(suite.Ctx, addr1, sdk.ValAddress(addr1))
 	claim, err := suite.App.CatdropKeeper.GetClaimRecord(suite.Ctx, addr1)
 	suite.NoError(err)
-	suite.True(claim.ActionCompleted[types.ActionDelegateStake])
+	suite.True(claim.ActionCompleted[types.ACTION_STAKE])
 
 	claimedCoins := suite.App.BankKeeper.GetAllBalances(suite.Ctx, addr1)
 	suite.Require().Equal(claimedCoins.AmountOf(types.DefaultClaimDenom), claimRecords[0].InitialClaimableAmount.AmountOf(types.DefaultClaimDenom).Quo(sdk.NewInt(5)))
@@ -335,7 +335,7 @@ func (suite *KeeperTestHelper) TestDuplicatedActionNotWithdrawRepeatedly() {
 	suite.App.CatdropKeeper.AfterDelegationModified(suite.Ctx, addr1, sdk.ValAddress(addr1))
 	claim, err = suite.App.CatdropKeeper.GetClaimRecord(suite.Ctx, addr1)
 	suite.NoError(err)
-	suite.True(claim.ActionCompleted[types.ActionDelegateStake])
+	suite.True(claim.ActionCompleted[types.ACTION_STAKE])
 
 	claimedCoins = suite.App.BankKeeper.GetAllBalances(suite.Ctx, addr1)
 	suite.Require().Equal(claimedCoins.AmountOf(types.DefaultClaimDenom), claimRecords[0].InitialClaimableAmount.AmountOf(types.DefaultClaimDenom).Quo(sdk.NewInt(5)))
@@ -376,7 +376,7 @@ func (suite *KeeperTestHelper) TestNotRunningGenesisBlock() {
 	suite.App.CatdropKeeper.AfterDelegationModified(suite.Ctx, addr1, sdk.ValAddress(addr1))
 	claim, err := suite.App.CatdropKeeper.GetClaimRecord(suite.Ctx, addr1)
 	suite.NoError(err)
-	suite.False(claim.ActionCompleted[types.ActionDelegateStake])
+	suite.False(claim.ActionCompleted[types.ACTION_STAKE])
 
 	coins1, err = suite.App.CatdropKeeper.GetUserTotalClaimable(suite.Ctx, addr1)
 	suite.Require().NoError(err)
