@@ -110,6 +110,7 @@ const (
 var (
 	NodeDir      = ".coolcat"
 	Bech32Prefix = "ccat"
+	DefaultNodeHome = os.ExpandEnv("$HOME/") + NodeDir
 
 	// ModuleBasics defines the module BasicManager is in charge of setting up basic,
 	// non-dependant module elements, such as codec registration
@@ -123,6 +124,9 @@ var (
 	// of "EnableAllProposals" (takes precedence over ProposalsEnabled)
 	// https://github.com/CosmWasm/wasmd/blob/02a54d33ff2c064f3539ae12d75d027d9c665f05/x/wasm/internal/types/proposal.go#L28-L34
 	EnableSpecificProposals = ""
+
+	// EmptyWasmOpts defines a type alias for a list of wasm options.
+	EmptyWasmOpts []wasm.Option
 
 	Upgrades = []upgrades.Upgrade{}
 	Forks    = []upgrades.Fork{}
@@ -145,14 +149,6 @@ func GetEnabledProposals() []wasm.ProposalType {
 	return proposals
 }
 
-// These constants are derived from the above variables.
-// These are the ones we will want to use in the code, based on
-// any overrides above
-var (
-	// DefaultNodeHome default home directories for coolcat
-	DefaultNodeHome = os.ExpandEnv("$HOME/") + NodeDir
-)
-
 var (
 	_ runtime.AppI            = (*CoolCatApp)(nil)
 	_ servertypes.Application = (*CoolCatApp)(nil)
@@ -162,6 +158,7 @@ var (
 type CoolCatApp struct {
 	*baseapp.BaseApp
 	keepers.AppKeepers
+
 	legacyAmino       *codec.LegacyAmino
 	appCodec          codec.Codec
 	txConfig          client.TxConfig
@@ -184,7 +181,6 @@ func NewCoolCatApp(
 	loadLatest bool,
 	skipUpgradeHeights map[int64]bool,
 	homePath string,
-	wasmEnabledProposals []wasm.ProposalType,
 	appOpts servertypes.AppOptions,
 	wasmOpts []wasm.Option,
 	baseAppOptions ...func(*baseapp.BaseApp),
@@ -195,6 +191,7 @@ func NewCoolCatApp(
 	interfaceRegistry := encodingConfig.InterfaceRegistry
 	txConfig := encodingConfig.TxConfig
 	invCheckPeriod := cast.ToUint(appOpts.Get(server.FlagInvCheckPeriod))
+	wasmEnabledProposals := GetEnabledProposals()
 
 	bApp := baseapp.NewBaseApp(appName, logger, db, txConfig.TxDecoder(), baseAppOptions...)
 	bApp.SetCommitMultiStoreTracer(traceStore)
@@ -415,6 +412,14 @@ func NewCoolCatApp(
 			tmos.Exit(fmt.Sprintf("failed initialize pinned codes %s", err))
 		}
 	}
+
+	// create the simulation manager and define the order of the modules for deterministic simulations
+	//
+	// NOTE: this is not required apps that don't use the simulator for fuzz testing
+	// transactions
+	app.sm = module.NewSimulationManager(simulationModules(app, encodingConfig, skipGenesisInvariants)...)
+
+	app.sm.RegisterStoreDecoders()
 
 	return app
 }

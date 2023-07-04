@@ -19,6 +19,7 @@ require (
 	github.com/strangelove-ventures/async-icq/v7 v7.0.0-20230410200408-3315fe3057aa
 	github.com/strangelove-ventures/packet-forward-middleware/v7 v7.0.0-20230412224111-136e94e98861
 	github.com/stretchr/testify v1.8.4
+	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc
 )
 
 require (
@@ -31,7 +32,6 @@ require (
 	github.com/linxGnu/grocksdb v1.7.16 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/rakyll/statik v0.1.7 // indirect
-	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 )
@@ -161,7 +161,6 @@ require (
 	go.etcd.io/bbolt v1.3.7 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/crypto v0.9.0 // indirect
-	golang.org/x/exp v0.0.0-20230515195305-f3d0a9c9a5cc // indirect
 	golang.org/x/net v0.10.0 // indirect
 	golang.org/x/oauth2 v0.7.0 // indirect
 	golang.org/x/sys v0.8.0 // indirect
@@ -172,7 +171,7 @@ require (
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20230410155749-daa745c078e1
 	google.golang.org/grpc v1.55.0
-	google.golang.org/protobuf v1.30.0
+	google.golang.org/protobuf v1.30.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.1 // indirect

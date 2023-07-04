@@ -72,7 +72,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 
 	rootCmd := &cobra.Command{
 		Use:   version.AppName,
-		Short: "CoolCat - Blockchain Node",
+		Short: "CoolCat - The Interchain Gaming Hub",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
@@ -94,7 +94,7 @@ func NewRootCmd() (*cobra.Command, params.EncodingConfig) {
 
 			customAppTemplate, customAppConfig := initAppConfig()
 
-			timeoutCommit := time.Second / 2
+			timeoutCommit := time.Second
 
 
 			return InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, timeoutCommit)
@@ -138,20 +138,8 @@ func initAppConfig() (string, interface{}) {
 	// Optionally allow the chain developer to overwrite the SDK's default
 	// server config.
 	srvCfg := serverconfig.DefaultConfig()
-	// The SDK's default minimum gas price is set to "" (empty value) inside
-	// app.toml. If left empty by validators, the node will halt on startup.
-	// However, the chain developer can set a default app.toml value for their
-	// validators here.
-	//
-	// In summary:
-	// - if you leave srvCfg.MinGasPrices = "", all validators MUST tweak their
-	//   own app.toml config,
-	// - if you set srvCfg.MinGasPrices non-empty, validators CAN tweak their
-	//   own app.toml to override, or use this default value.
-	//
-	// In simapp, we set the min gas prices to 0.
 	srvCfg.MinGasPrices = "2000000uccat"
-	// srvCfg.BaseConfig.IAVLDisableFastNode = true // disable fastnode by default
+	srvCfg.BaseConfig.IAVLDisableFastNode = true // disable fastnode by default
 
 	customAppConfig := CustomAppConfig{
 		Config: *srvCfg,
@@ -171,12 +159,10 @@ func initRootCmd(rootCmd *cobra.Command, encodingConfig params.EncodingConfig) {
 		genutilcli.InitCmd(app.ModuleBasics, app.DefaultNodeHome),
 		genutilcli.CollectGenTxsCmd(banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome, gentxModule.GenTxValidator),
 		genutilcli.MigrateGenesisCmd(),
-		NewTestnetCmd(app.ModuleBasics, banktypes.GenesisBalancesIterator{}),
 		genutilcli.GenTxCmd(app.ModuleBasics, encodingConfig.TxConfig, banktypes.GenesisBalancesIterator{}, app.DefaultNodeHome),
 		genutilcli.ValidateGenesisCmd(app.ModuleBasics),
 		AddGenesisAccountCmd(app.DefaultNodeHome),
 		tmcli.NewCompletionCmd(rootCmd, true),
-		// testnetCmd(app.ModuleBasics, banktypes.GenesisBalancesIterator{}),
 		debug.Cmd(),
 		config.Cmd(),
 		pruning.PruningCmd(newApp),
@@ -295,7 +281,6 @@ func newApp(
 		logger, db, traceStore, true,
 		skipUpgradeHeights,
 		os.ExpandEnv("$HOME/") + ".coolcat",
-		app.GetEnabledProposals(),
 		appOpts,
 		wasmOpts,
 		baseapp.SetPruning(pruningOpts),
@@ -353,7 +338,6 @@ func appExport(
 		height == -1,
 		skipUpgradeHeights,
 		homePath,
-		app.GetEnabledProposals(),
 		appOpts,
 		emptyWasmOpts,
 	)
