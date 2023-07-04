@@ -3,6 +3,7 @@ package catdrop
 import (
 	"fmt"
 
+	"cosmossdk.io/errors"
 	"github.com/coolcat-network/coolcat/v1/x/catdrop/keeper"
 	"github.com/coolcat-network/coolcat/v1/x/catdrop/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
@@ -20,7 +21,7 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 			return sdk.WrapServiceResult(ctx, res, err)
 		default:
 			errMsg := fmt.Sprintf("unrecognized %s message type: %T", types.ModuleName, msg)
-			return nil, sdkerrors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
+			return nil, errors.Wrap(sdkerrors.ErrUnknownRequest, errMsg)
 		}
 	}
 }

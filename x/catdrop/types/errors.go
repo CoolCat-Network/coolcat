@@ -1,14 +1,12 @@
 package types
 
-// DONTCOVER
+import "cosmossdk.io/errors"
 
-import (
-	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-)
+// DONTCOVER
 
 // x/catdrop module errors
 var (
-	ErrAirdropNotEnabled             = sdkerrors.Register(ModuleName, 2, "Catdrop is not enabled yet.")
-	ErrIncorrectModuleAccountBalance = sdkerrors.Register(ModuleName, 3, "Catdrop module account balance != sum of all claim records InitialClaimableAmounts")
-	ErrUnauthorizedClaimer           = sdkerrors.Register(ModuleName, 4, "This address is not allowed to claim their Catdrop")
+	ErrAirdropNotEnabled             = errors.Register(ModuleName, 2, "Catdrop is not enabled yet.")
+	ErrIncorrectModuleAccountBalance = errors.Register(ModuleName, 3, "Catdrop module account balance != sum of all claim records InitialClaimableAmounts")
+	ErrUnauthorizedClaimer           = errors.Register(ModuleName, 4, "This address is not allowed to claim their Catdrop")
 )

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"cosmossdk.io/errors"
 	catdroptypes "github.com/coolcat-network/coolcat/v1/x/catdrop/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -50,7 +51,7 @@ func Encoder(contract sdk.AccAddress, data json.RawMessage, version string) ([]s
 	msg := &ClaimMsg{}
 	err := json.Unmarshal(data, msg)
 	if err != nil {
-		return nil, sdkerrors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
+		return nil, errors.Wrap(sdkerrors.ErrJSONUnmarshal, err.Error())
 	}
 	if msg.ClaimFor != nil {
 		return msg.ClaimFor.Encode(contract)

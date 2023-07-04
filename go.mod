@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	cosmossdk.io/math v1.0.1
+	cosmossdk.io/errors v1.0.0-beta.7
 	github.com/CosmWasm/wasmd v1.0.0
 	github.com/cometbft/cometbft v0.37.2
 	github.com/cometbft/cometbft-db v0.8.0
@@ -50,7 +51,7 @@ require (
 	github.com/99designs/keyring v1.2.1 // indirect
 	github.com/ChainSafe/go-schnorrkel v0.0.0-20200405005733-88cbf1b4c40d // indirect
 	github.com/CosmWasm/wasmvm v1.2.3 // indirect
-	github.com/armon/go-metrics v0.4.1
+	github.com/armon/go-metrics v0.4.1 // indirect
 	github.com/aws/aws-sdk-go v1.44.240 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bgentry/go-netrc v0.0.0-20140422174119-9fd32a8b3d3d // indirect
