@@ -103,23 +103,6 @@ f_install_protoc_gen_grpc_gateway() {
   f_print_done
 }
 
-f_install_protoc_gen_swagger() {
-  f_print_installing_with_padding protoc-gen-swagger
-  f_needs_install "${DESTDIR}/${PREFIX}/bin/protoc-gen-swagger" || return 0
-
-  if ! which npm &>/dev/null ; then
-    echo -e "\tNPM is not installed. Skipping."
-    return 0
-  fi
-
-  pushd "${TEMPDIR}" >/dev/null
-  go get github.com/grpc-ecosystem/grpc-gateway/protoc-gen-openapiv2
-
-  npm install -g swagger-combine
-  popd >/dev/null
-  f_print_done
-}
-
 f_install_clang_format() {
   f_print_installing_with_padding clang-format
 
@@ -152,5 +135,4 @@ f_install_protoc
 f_install_buf
 f_install_protoc_gen_gocosmos
 f_install_protoc_gen_grpc_gateway
-f_install_protoc_gen_swagger
 f_install_clang_format
