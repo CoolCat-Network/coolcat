@@ -8,9 +8,7 @@ import "coolcat/catdrop/v1/claim_record.proto";
 option go_package = "github.com/coolcat-network/coolcat/v1/x/catdrop/types";
 
 // Msg defines the Msg service.
-service Msg {
-  rpc ClaimFor(MsgClaimFor) returns (MsgClaimForResponse);
-}
+service Msg { rpc ClaimFor(MsgClaimFor) returns (MsgClaimForResponse); }
 
 message MsgClaimFor {
   string sender = 1;

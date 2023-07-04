@@ -3,8 +3,8 @@ module github.com/coolcat-network/coolcat/v1
 go 1.20
 
 require (
-	cosmossdk.io/math v1.0.1
 	cosmossdk.io/errors v1.0.0-beta.7
+	cosmossdk.io/math v1.0.1
 	github.com/CosmWasm/wasmd v1.0.0
 	github.com/cometbft/cometbft v0.37.2
 	github.com/cometbft/cometbft-db v0.8.0
@@ -31,6 +31,7 @@ require (
 	github.com/linxGnu/grocksdb v1.7.16 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/rakyll/statik v0.1.7 // indirect
+	github.com/regen-network/cosmos-proto v0.3.1 // indirect
 	github.com/rs/zerolog v1.29.1 // indirect
 	github.com/ugorji/go/codec v1.2.11 // indirect
 )
@@ -44,7 +45,6 @@ require (
 	cosmossdk.io/api v0.3.1
 	cosmossdk.io/core v0.5.1 // indirect
 	cosmossdk.io/depinject v1.0.0-alpha.3 // indirect
-	cosmossdk.io/errors v1.0.0-beta.7
 	cosmossdk.io/tools/rosetta v0.2.1
 	filippo.io/edwards25519 v1.0.0 // indirect
 	github.com/99designs/go-keychain v0.0.0-20191008050251-8e49817e8af4 // indirect
