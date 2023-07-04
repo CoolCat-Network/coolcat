@@ -27,6 +27,7 @@ var _ = time.Kitchen
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// contract_address = Profile / Clowder, Action === correct action
 type ClaimAuthorization struct {
 	ContractAddress string `protobuf:"bytes,1,opt,name=contract_address,json=contractAddress,proto3" json:"contract_address,omitempty" yaml:"contract_address"`
 	Action          Action `protobuf:"varint,2,opt,name=action,proto3,enum=coolcat.catdrop.v1.Action" json:"action,omitempty" yaml:"action"`
@@ -76,7 +77,7 @@ func (m *ClaimAuthorization) GetAction() Action {
 	if m != nil {
 		return m.Action
 	}
-	return ActionVote
+	return ACTION_VOTE_UNSPECIFIED
 }
 
 // Params defines the claim module's parameters.

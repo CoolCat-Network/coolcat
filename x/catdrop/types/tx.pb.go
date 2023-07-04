@@ -30,6 +30,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// MsgType to claim the catdrop reward for action PROFILE and CLOWDER
 type MsgClaimFor struct {
 	Sender  string `protobuf:"bytes,1,opt,name=sender,proto3" json:"sender,omitempty"`
 	Address string `protobuf:"bytes,2,opt,name=address,proto3" json:"address,omitempty"`
@@ -87,9 +88,10 @@ func (m *MsgClaimFor) GetAction() Action {
 	if m != nil {
 		return m.Action
 	}
-	return ActionVote
+	return ACTION_VOTE_UNSPECIFIED
 }
 
+// Msg response for claiming the catdrop reward for action PROFILE and CLOWDER
 type MsgClaimForResponse struct {
 	Address string `protobuf:"bytes,1,opt,name=address,proto3" json:"address,omitempty"`
 	// total initial claimable amount for the user
@@ -191,6 +193,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
+	// CosmWasm Contract Claimer
 	ClaimFor(ctx context.Context, in *MsgClaimFor, opts ...grpc.CallOption) (*MsgClaimForResponse, error)
 }
 
@@ -213,6 +216,7 @@ func (c *msgClient) ClaimFor(ctx context.Context, in *MsgClaimFor, opts ...grpc.
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
+	// CosmWasm Contract Claimer
 	ClaimFor(context.Context, *MsgClaimFor) (*MsgClaimForResponse, error)
 }
 

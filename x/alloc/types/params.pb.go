@@ -24,6 +24,7 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
+// DistributionProportions holds all proportions of the total mint split
 type DistributionProportions struct {
 	CommunityPool github_com_cosmos_cosmos_sdk_types.Dec `protobuf:"bytes,3,opt,name=community_pool,json=communityPool,proto3,customtype=github.com/cosmos/cosmos-sdk/types.Dec" json:"community_pool"`
 }
@@ -61,6 +62,7 @@ func (m *DistributionProportions) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_DistributionProportions proto.InternalMessageInfo
 
+// Params define the proportion amount of the total mint split
 type Params struct {
 	// distribution_proportions defines the proportion of the minted denom
 	DistributionProportions DistributionProportions `protobuf:"bytes,1,opt,name=distribution_proportions,json=distributionProportions,proto3" json:"distribution_proportions"`

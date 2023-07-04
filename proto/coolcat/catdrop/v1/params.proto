@@ -8,6 +8,7 @@ import "coolcat/catdrop/v1/claim_record.proto";
 
 option go_package = "github.com/coolcat-network/coolcat/v1/x/catdrop/types";
 
+// contract_address = Profile / Clowder, Action === correct action
 message ClaimAuthorization {
   string contract_address = 1
       [ (gogoproto.moretags) = "yaml:\"contract_address\"" ];

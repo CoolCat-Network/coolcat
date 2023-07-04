@@ -8,14 +8,19 @@ import "coolcat/catdrop/v1/claim_record.proto";
 option go_package = "github.com/coolcat-network/coolcat/v1/x/catdrop/types";
 
 // Msg defines the Msg service.
-service Msg { rpc ClaimFor(MsgClaimFor) returns (MsgClaimForResponse); }
+service Msg {
+  // CosmWasm Contract Claimer
+  rpc ClaimFor(MsgClaimFor) returns (MsgClaimForResponse);
+}
 
+// MsgType to claim the catdrop reward for action PROFILE and CLOWDER
 message MsgClaimFor {
   string sender = 1;
   string address = 2;
   Action action = 3;
 }
 
+// Msg response for claiming the catdrop reward for action PROFILE and CLOWDER
 message MsgClaimForResponse {
   string address = 1;
   // total initial claimable amount for the user

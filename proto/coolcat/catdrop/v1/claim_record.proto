@@ -6,14 +6,21 @@ import "cosmos/base/v1beta1/coin.proto";
 
 option go_package = "github.com/coolcat-network/coolcat/v1/x/catdrop/types";
 
+// Provides one of the 4 categories of the initial catdrop
 enum Action {
+  // Check if this address voted on a gov proposal
   option (gogoproto.goproto_enum_prefix) = false;
-  ActionVote = 0;
-  ActionDelegateStake = 1;
-  ActionCreateProfile = 2;
-  ActionUseClowder = 3;
+  // Check if this address voted on a gov proposal
+  ACTION_VOTE_UNSPECIFIED = 0;
+  // Check if this address staked some CoolCat
+  ACTION_STAKE = 1;
+  // Check if this address created a on-chain profile
+  ACTION_CREATEPROFILE = 2;
+  // Check if this address interacted with clowders in any way
+  ACTION_USECLOWDER = 3;
 }
 
+// Shows how many actions this user has completed.
 message ClaimRecord {
   // address of claim user
   string address = 1 [ (gogoproto.moretags) = "yaml:\"address\"" ];

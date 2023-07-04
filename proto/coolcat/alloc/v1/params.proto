@@ -5,6 +5,7 @@ option go_package = "github.com/coolcat-network/coolcat/v1/x/alloc/types";
 
 import "gogoproto/gogo.proto";
 
+// DistributionProportions holds all proportions of the total mint split
 message DistributionProportions {
   string community_pool = 3 [
     (gogoproto.customtype) = "github.com/cosmos/cosmos-sdk/types.Dec",
@@ -12,6 +13,7 @@ message DistributionProportions {
   ];
 }
 
+// Params define the proportion amount of the total mint split
 message Params {
   // distribution_proportions defines the proportion of the minted denom
   DistributionProportions distribution_proportions = 1
